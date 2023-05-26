@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, UpdateView
+from django.http import HttpResponseForbidden
 
 from blog.models import Category, Comment, Post
 
@@ -92,7 +93,9 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "blog/create.html"
 
     def dispatch(self, request, *args, **kwargs):
-        self.instance = get_object_or_404(Post, pk=kwargs["pk"])
+        instance = get_object_or_404(Post, pk=kwargs["pk"])
+        if instance.author != request.user:
+            raise HttpResponseForbidden
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -133,6 +136,12 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "blog/comment.html"
     form_class = CommentForm
     success_url = reverse_lazy("blog:index")
+
+    def dispatch(self, request, *args, **kwargs):
+        instance = get_object_or_404(Comment, pk=kwargs["pk"])
+        if instance.author != request.user:
+            raise HttpResponseForbidden
+        return super().dispatch(request, *args, **kwargs)
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):

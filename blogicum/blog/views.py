@@ -47,7 +47,9 @@ def category_posts(request, category_slug):
     category = get_object_or_404(
         Category.objects.filter(slug=category_slug), is_published=True
     )
-    post_list = get_post_filter().filter(category=category)
+    post_list = (
+        get_post_filter().order_by("-pub_date").filter(category=category)
+    )
     paginator = Paginator(post_list, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)

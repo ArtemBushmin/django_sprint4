@@ -3,7 +3,7 @@ import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, UpdateView
 from django.http import HttpResponseForbidden
@@ -95,7 +95,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     def dispatch(self, request, *args, **kwargs):
         instance = get_object_or_404(Post, pk=kwargs["pk"])
         if instance.author != request.user:
-            raise HttpResponseForbidden
+            return redirect("blog:post_detail", id=kwargs["pk"])
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -138,9 +138,9 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("blog:index")
 
     def dispatch(self, request, *args, **kwargs):
-        instance = get_object_or_404(Comment, pk=kwargs["pk"])
+        instance = get_object_or_404(Post, pk=kwargs["post_id"])
         if instance.author != request.user:
-            raise HttpResponseForbidden
+            return redirect("blog:post_detail", id=kwargs["post_id"])
         return super().dispatch(request, *args, **kwargs)
 
 

@@ -6,7 +6,6 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, UpdateView
-from django.http import HttpResponseForbidden
 
 from blog.models import Category, Comment, Post
 

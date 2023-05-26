@@ -91,8 +91,6 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         self.instance = get_object_or_404(Post, pk=kwargs["pk"])
-        if self.instance.author != request.user:
-            raise reverse("blog:post_detail", kwargs={"id": self.instance.pk})
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):

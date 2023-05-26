@@ -87,13 +87,14 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
+    instance = None
     model = Post
     form_class = PostForm
     template_name = "blog/create.html"
 
     def dispatch(self, request, *args, **kwargs):
-        instance = get_object_or_404(Post, pk=kwargs["pk"])
-        if instance.author != request.user:
+        self.instance = get_object_or_404(Post, pk=kwargs["pk"])
+        if self.instance.author != request.user:
             return redirect("blog:post_detail", id=kwargs["pk"])
         return super().dispatch(request, *args, **kwargs)
 
@@ -147,6 +148,12 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = "blog/create.html"
     success_url = reverse_lazy("blog:index")
+
+    def dispatch(self, request, *args, **kwargs):
+        instance = get_object_or_404(Post, pk=kwargs["pk"])
+        if instance.author != request.user:
+            return redirect("blog:post_detail", id=kwargs["pk"])
+        return super().dispatch(request, *args, **kwargs)
 
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):

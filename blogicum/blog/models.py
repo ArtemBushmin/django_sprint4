@@ -96,7 +96,9 @@ class Post(models.Model):
 
     @property
     def comment_count(self):
-        count = Comment.objects.filter(post_id=self.id).count()
+        count = 0
+        if Comment.objects.filter(post_id=self.id):
+            count = Comment.objects.filter(post_id=self.id).count()
         return count
 
 

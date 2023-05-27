@@ -154,8 +154,19 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
             return redirect("blog:post_detail", id=kwargs["pk"])
         return super().dispatch(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = {"instance": self.instance}
+        return context
+
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
     model = Comment
     template_name = "blog/comment.html"
     success_url = reverse_lazy("blog:index")
+
+    def dispatch(self, request, *args, **kwargs):
+        instance = get_object_or_404(Comment, pk=kwargs["pk"])
+        if instance.author != request.user:
+            return redirect("blog:post_detail", id=kwargs["post_id"])
+        return super().dispatch(request, *args, **kwargs)

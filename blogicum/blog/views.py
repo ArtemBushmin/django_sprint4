@@ -1,9 +1,10 @@
 import datetime
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, UpdateView
 
@@ -21,6 +22,7 @@ def get_post_filter():
     )
 
 
+@login_required
 def index(request):
     template = "blog/index.html"
     post_list = get_post_filter().order_by("-pub_date")
@@ -31,6 +33,7 @@ def index(request):
     return render(request, template, context)
 
 
+@login_required
 def post_detail(request, id):
     template = "blog/detail.html"
     post = get_object_or_404(get_post_filter(), id=id)
@@ -42,6 +45,7 @@ def post_detail(request, id):
     return render(request, template, context)
 
 
+@login_required
 def category_posts(request, category_slug):
     template = "blog/category.html"
     category = get_object_or_404(

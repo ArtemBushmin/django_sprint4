@@ -114,7 +114,6 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
-    instance = None
     model = Comment
     form_class = CommentForm
 

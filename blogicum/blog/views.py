@@ -58,7 +58,6 @@ def category_posts(request, category_slug):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     context = {
-        "post_list": post_list,
         "category": category,
         "page_obj": page_obj,
     }

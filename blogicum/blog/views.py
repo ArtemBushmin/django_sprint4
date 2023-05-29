@@ -137,13 +137,15 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
     model = Comment
     template_name = "blog/comment.html"
     form_class = CommentForm
-    success_url = reverse_lazy("blog:index")
 
     def dispatch(self, request, *args, **kwargs):
-        instance = get_object_or_404(Post, pk=kwargs["post_id"])
-        if instance.author != request.user:
-            return redirect("blog:post_detail", id=kwargs["post_id"])
+        self.instance = get_object_or_404(Post, pk=kwargs["post_id"])
+        if self.instance.author != request.user:
+            return reverse("blog:post_detail", kwargs={"id": self.instance.id})
         return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse("blog:post_detail", kwargs={"id": self.instance.id})
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):

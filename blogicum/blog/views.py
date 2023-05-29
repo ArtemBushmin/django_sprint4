@@ -145,6 +145,11 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
             return redirect("blog:post_detail", id=kwargs["post_id"])
         return super().dispatch(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment'] = {'post_id': 57, 'id': 4}
+        return context
+
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post

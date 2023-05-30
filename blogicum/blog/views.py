@@ -139,13 +139,15 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
     form_class = CommentForm
 
     def dispatch(self, request, *args, **kwargs):
-        self.instance = get_object_or_404(Post, pk=kwargs["post_id"])
+        self.instance = get_object_or_404(Comment, pk=kwargs["pk"])
         if self.instance.author != request.user:
-            return reverse("blog:post_detail", kwargs={"id": self.instance.id})
+            return redirect("blog:post_detail", self.instance.post_id)
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse("blog:post_detail", kwargs={"id": self.instance.id})
+        return reverse(
+            "blog:post_detail", kwargs={"id": self.instance.post_id}
+        )
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):

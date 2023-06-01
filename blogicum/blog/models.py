@@ -62,7 +62,10 @@ class Post(models.Model):
         ),
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name="Автор публикации"
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Автор публикации",
+        related_name="posts_user",
     )
     location = models.ForeignKey(
         Location,
@@ -76,6 +79,7 @@ class Post(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         verbose_name="Категория",
+        related_name="posts",
     )
     is_published = models.BooleanField(
         default=True,
@@ -94,20 +98,13 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-    @property
-    def comment_count(self):
-        count = 0
-        if Comment.objects.filter(post_id=self.id):
-            count = Comment.objects.filter(post_id=self.id).count()
-        return count
-
 
 class Comment(models.Model):
     text = models.TextField("Текст комментария")
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
-        related_name="comment",
+        related_name="comments",
     )
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -120,7 +120,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
-    publication = None
     model = Post
     form_class = PostForm
     template_name = "blog/create.html"
@@ -147,7 +146,6 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
-    comment = None
     model = Comment
     form_class = CommentForm
 
@@ -162,7 +160,6 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
 
 class CommentUpdateView(LoginRequiredMixin, UpdateView):
-    comment = None
     model = Comment
     template_name = "blog/comment.html"
     form_class = CommentForm
@@ -180,7 +177,6 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
-    publication = None
     model = Post
     template_name = "blog/create.html"
     success_url = reverse_lazy("blog:index")
@@ -198,7 +194,6 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
-    comment = None
     model = Comment
     template_name = "blog/comment.html"
     success_url = reverse_lazy("blog:index")
